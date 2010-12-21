@@ -133,7 +133,7 @@ public class Request<T> {
 	private HttpResponse execGet() throws Exception {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet();
-		if (postParameter != null && postParameter.size() != 0) {
+		if (postParameter != null && !postParameter.isEmpty()) {
 			httpGet.setURI(new URI(requestIf.getUrl() + "?" + getRequestParam()));
 		} else {
 			httpGet.setURI(new URI(requestIf.getUrl()));
@@ -147,12 +147,12 @@ public class Request<T> {
 		StringBuilder builder = new StringBuilder();
 		builder.append("OAuth ");
 		for (Map.Entry<String, String> param : authParameter.entrySet()) {
-			builder.append(param.getKey() + "=");
-			builder.append("\"" + param.getValue() + "\",");
+			builder.append(param.getKey()).append("=");
+			builder.append("\"").append(param.getValue()).append("\",");
 		}
 		builder.append("oauth_signature=");
 		String sig = getSignature();
-		builder.append("\"" + sig + "\"");
+		builder.append("\"").append(sig).append("\"");
 		return builder.toString();
 	}
 
@@ -175,7 +175,7 @@ public class Request<T> {
 			encoded = URLEncoder.encode(value, "UTF-8");
 		} catch (UnsupportedEncodingException ignore) {
 		}
-		StringBuffer buf = new StringBuffer(encoded.length());
+		StringBuilder buf = new StringBuilder(encoded.length());
 		char focus;
 		for (int i = 0; i < encoded.length(); i++) {
 			focus = encoded.charAt(i);

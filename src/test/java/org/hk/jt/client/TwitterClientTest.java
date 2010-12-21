@@ -4,12 +4,11 @@
  */
 package org.hk.jt.client;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
 
 /**
  *
@@ -17,17 +16,27 @@ import org.junit.Test;
  */
 public class TwitterClientTest {
 
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
+    private final String _CONSUMER_KEY;
+    private final String _CONSUMER_SERCRET;
+    private final String _USER_ID;
+    private final String _PASSWORD;
 
-    @Before
-    public void setUp() throws Exception {
+    public TwitterClientTest() throws IOException{
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(
                 "jt.properties");
         properties.load(inputStream);
+        _CONSUMER_KEY = properties.getProperty("CONSUMER_KEY");
+        _CONSUMER_SERCRET = properties.getProperty("CONSUMER_KEY_SERCRET");
+        _USER_ID = properties.getProperty("TWITTER_ID");
+        _PASSWORD = properties.getProperty("TWITTER_PASSWORD");
     }
 
     @Test
-    public void testAccessToken() {
-        System.out.println(properties.getProperty("CONSUMER_KEY"));
+    public void testAccessToken() throws Exception {
+        TwitterClient twitterClient = TwitterClient.getInstance(_CONSUMER_KEY, _CONSUMER_SERCRET, _USER_ID, _PASSWORD);
+        twitterClient.getAccessToken();
+        assertNotNull(twitterClient.getConfig().getAccessToken());
+        assertNotNull(twitterClient.getConfig().getAccessTokenSercret());
     }
 }

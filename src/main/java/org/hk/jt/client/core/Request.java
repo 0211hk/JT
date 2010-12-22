@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -37,6 +38,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 
 public class Request<T> {
 
@@ -52,7 +54,7 @@ public class Request<T> {
 		this.config = this.requestIf.getConfig();
 	}
 
-	public T request() throws Exception {
+	public T request() throws UnsupportedEncodingException, JSONException, IOException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException  {
 		postParameter = requestIf.getPostParameters();
 		authParameter = requestIf.getAuthParameter();
 		HttpResponse response = null;
@@ -98,13 +100,13 @@ public class Request<T> {
 		return requestIf.getResponse(sb.toString());
 	}
 
-	private HttpResponse execPost() throws Exception {
+	private HttpResponse execPost() throws URISyntaxException, InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, IOException  {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost();
 		httpPost.setURI(new URI(requestIf.getUrl()));
 		httpPost.setHeader("Authorization", createAuthorizationValue());
 
-		if (postParameter != null && postParameter.size() != 0) {
+		if (postParameter != null && !postParameter.isEmpty()) {
 			final List<NameValuePair> params = new ArrayList<NameValuePair>();
 			for (String key : postParameter.keySet()) {
 				params.add(new BasicNameValuePair(key, postParameter.get(key)));
@@ -116,7 +118,7 @@ public class Request<T> {
 			final MultipartEntity entity = new MultipartEntity(
 					HttpMultipartMode.BROWSER_COMPATIBLE);
 			List<NameValuePair> fileList = requestIf.getFiles();
-			if (fileList != null && fileList.size() != 0) {
+			if (fileList != null && !fileList.isEmpty()) {
 				for (NameValuePair val : fileList) {
 					File file = new File(val.getValue());
 					entity.addPart(val.getName(), new FileBody(file,
@@ -130,7 +132,7 @@ public class Request<T> {
 		return client.execute(httpPost);
 	}
 
-	private HttpResponse execGet() throws Exception {
+	private HttpResponse execGet() throws URISyntaxException, UnsupportedEncodingException, InvalidKeyException, IOException, NoSuchAlgorithmException  {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet();
 		if (postParameter != null && !postParameter.isEmpty()) {

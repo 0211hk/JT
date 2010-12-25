@@ -7,6 +7,8 @@ package org.hk.jt.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import static org.hk.jt.client.api.TwitterUrls.*;
+import static org.hk.jt.client.core.RequestIf.Method.*;
 import org.json.JSONArray;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
@@ -24,7 +26,7 @@ public class TwitterClientTest {
     private final String _PASSWORD;
     private TwitterClient twitterClient = null;
 
-    public TwitterClientTest() throws IOException{
+    public TwitterClientTest() throws IOException {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(
                 "jt.properties");
         properties.load(inputStream);
@@ -42,19 +44,14 @@ public class TwitterClientTest {
         assertNotNull(twitterClient.getConfig().getAccessTokenSercret());
     }
 
-    @Test(dependsOnMethods={"testAccessToken"})
-    public void testHomeTimeLine()throws Exception{
-        JSONArray jsonArray = twitterClient.getHomeTimeline();
+    @Test(dependsOnMethods = {"testAccessToken"})
+    public void testHomeTimeLine() throws Exception {
+        JSONArray jsonArray = twitterClient.from(HOME_TIMELINE.toString()).getJsonArray();
         assertEquals(20, jsonArray.length());
     }
 
     @Test(dependsOnMethods={"testAccessToken"})
-    public void testHomeTimeLineAsync(){
-        twitterClient.getHomeTimelineAsync(new TwitterCallbackIf<JSONArray>() {
-            @Override
-            public void twitterCallback(JSONArray returnMap) {
-               assertEquals(20, returnMap.length());
-            }
-        });
+    public void testMention()throws Exception{
+        
     }
 }

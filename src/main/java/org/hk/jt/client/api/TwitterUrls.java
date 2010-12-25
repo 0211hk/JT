@@ -1,19 +1,19 @@
 package org.hk.jt.client.api;
 
 public enum TwitterUrls {
-	GET_TIME_LINE("https://api.twitter.com/1/statuses/home_timeline.json"),
-	GET_MENTION("https://api.twitter.com/1/statuses/mentions.json"),
-	GET_DIRECT_MESSAGE("https://api.twitter.com/1/direct_messages.json"),
-	GET_SENT_MESSAGE("https://api.twitter.com/1/direct_messages/sent.json"),
-	GET_SHOW_USER("https://api.twitter.com/1/users/show.json"),
-	GET_USER_TIME_LINE("http://api.twitter.com/1/statuses/user_timeline.json"),
-	GET_VERIFY_CREDENTIALS("https://api.twitter.com/1/account/verify_credentials.json"),
-	POST_TWEET("https://api.twitter.com/1/statuses/update.json"),
-	DELETE_TWEET("https://api.twitter.com/1/statuses/destroy/%s.json"),
-	POST_MESSAGE("https://api.twitter.com/1/direct_messages/new.json"),
-	DELETE_MESSAGE("https://api.twitter.com/1/direct_messages/destroy/%s.json"),
-	IS_FOLLOW("https://api.twitter.com/1/friendships/exists.json"),
-	REQUEST_FOLLOW("http://api.twitter.com/1/friendships/create.json");
+	HOME_TIMELINE("https://api.twitter.com/1/statuses/home_timeline.json"),
+	MENTIONS("https://api.twitter.com/1/statuses/mentions.json"),
+	DIRECT_MESSAGE("https://api.twitter.com/1/direct_messages.json"),
+	DIRECT_MESSAGE_SENT("https://api.twitter.com/1/direct_messages/sent.json"),
+	USERS_SHOW("https://api.twitter.com/1/users/show.json"),
+	USER_TIME_LINE("http://api.twitter.com/1/statuses/user_timeline.json"),
+	VERIFY_CREDENTIALS("https://api.twitter.com/1/account/verify_credentials.json"),
+	STATUSES_UPDATE("https://api.twitter.com/1/statuses/update.json"),
+	STATUSES_DESTROY("https://api.twitter.com/1/statuses/destroy/%s.json"),
+	DIRECT_MESSAGES_NEW("https://api.twitter.com/1/direct_messages/new.json"),
+	DELETE_MESSAGE_DESTROY("https://api.twitter.com/1/direct_messages/destroy/%s.json"),
+	FRIENDSSHIPS_EXISTS("https://api.twitter.com/1/friendships/exists.json"),
+	FRIENDSSHIPS_CREATE("http://api.twitter.com/1/friendships/create.json");
 	
 	private final String url;
 	

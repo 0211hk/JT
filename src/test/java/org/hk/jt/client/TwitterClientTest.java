@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import static org.hk.jt.client.api.TwitterUrls.*;
-import static org.hk.jt.client.core.RequestIf.Method.*;
 import org.json.JSONArray;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;

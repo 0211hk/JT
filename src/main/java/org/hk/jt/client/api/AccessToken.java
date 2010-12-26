@@ -45,7 +45,7 @@ public class AccessToken implements RequestIf<Map<String,String>>{
 		final Map<String,String> map = new HashMap<String,String>();
 		map.put("x_auth_mode", "client_auth");
 		map.put("x_auth_password", config.getPassword());
-		map.put("x_auth_username", config.getUserName());
+		map.put("x_auth_username", config.getUserId());
 		if(postParameterIf != null){
 			postParameterIf.setPostParameter(map);
 		}

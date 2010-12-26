@@ -1,5 +1,8 @@
 package org.hk.jt.client.api;
-
+/**
+ *
+ * @author hk
+ */
 public enum TwitterUrls {
 	HOME_TIMELINE("https://api.twitter.com/1/statuses/home_timeline.json"),
 	MENTIONS("https://api.twitter.com/1/statuses/mentions.json"),
@@ -20,11 +23,16 @@ public enum TwitterUrls {
 	private TwitterUrls(final String url){
 		this.url = url;
 	}
+
+        public String getUrl(String...args){
+            return String.format(this.url,(Object[]) args);
+        }
 	
 	public String getUrl(){
 		return this.url;
 	}
-	
+
+        @Override
 	public String toString(){
 		return this.url;
 	}

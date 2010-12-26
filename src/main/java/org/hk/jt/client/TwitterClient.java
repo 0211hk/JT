@@ -12,15 +12,36 @@ import org.json.JSONObject;
 import org.hk.jt.client.api.AccessToken;
 import org.hk.jt.client.api.PostParameterIf;
 import org.hk.jt.client.api.RequestTwitterJsonArray;
-import org.hk.jt.client.api.TwitterUrls;
 import static org.hk.jt.client.api.TwitterUrls.*;
 import org.hk.jt.client.api.RequestTwitterJsonObject;
 import org.hk.jt.client.api.RequestTwitterString;
+import org.hk.jt.client.api.TwitterUrls;
 import org.hk.jt.client.core.Request;
 import org.hk.jt.client.core.RequestIf.Method;
 import static org.hk.jt.client.core.RequestIf.Method.*;
 import org.hk.jt.client.util.TwitterClientUtil;
 
+/**
+ * Access to Twitter
+ * <pre>
+ * //create TwitterClient instance
+ * TwitterClient twitterClient = TwitterClient.getInstance(_CONSUMER_KEY, _CONSUMER_SERCRET, _USER_ID, _PASSWORD);
+ * //first you get AccessToken
+ * twitterClient.getAccessToken();
+ * //now you can get ScreenName and TwitterUserId
+ * String screenName = twitterClient.getConfig().getScreenName();
+ * long twitterUserId = twitterClient.getConfig().getTwitterUserId();
+ * //get home timeline
+ * JSONArray jsonArray = twitterClient.from(HOME_TIMELINE.toString()).getJsonArray();
+ * //expect 20
+ * System.out.println(jsonArray.length());
+ *
+ * jsonArray = twitterClient.from(HOME_TIMELINE.toString()).param("page","100").getJsonArray();
+ * //expect 100
+ * System.out.println(jsonArray.length());
+ * </pre>
+ * @author hk
+ */
 public final class TwitterClient {
 
     private static TwitterClient instance = new TwitterClient();
@@ -28,7 +49,6 @@ public final class TwitterClient {
     private final ExecutorService es = Executors.newCachedThreadPool();
     private String url = HOME_TIMELINE.toString();
     private final Map<String, String> paramMap = new HashMap<String, String>();
-    private TwitterCallbackIf callBack = null;
     private Method method = GET;
 
     private TwitterClient() {
@@ -90,26 +110,48 @@ public final class TwitterClient {
         if (map.containsKey("user_id")) {
             String userId = map.get("user_id");
             if (TwitterClientUtil.isLong(userId)) {
-                instance.config.setUserId(Long.parseLong(map.get("user_id")));
+                instance.config.setTwitterUserId(Long.parseLong(map.get("user_id")));
             }
         }
     }
 
+    /**
+     * set Twitter API URL
+     * @see TwitterUrls
+     * @param url
+     * @return
+     */
     public TwitterClient from(final String url) {
         instance.url = url;
         return instance;
     }
 
+    /**
+     * set extra parameter
+     * @param key
+     * @param value
+     * @return
+     */
     public TwitterClient param(final String key, final String value) {
         instance.paramMap.put(key, value);
         return instance;
     }
 
+    /**
+     * set http method GET or POST or PUT or DELETE
+     * @param method
+     * @return
+     */
     public TwitterClient method(Method method) {
         instance.method = method;
         return instance;
     }
 
+    /**
+     * get Twitter API return value as JsonArray
+     * @return
+     * @throws Exception
+     */
     public JSONArray getJsonArray() throws Exception {
         JSONArray jsonArray = execRequest(new Request<JSONArray>(new RequestTwitterJsonArray(
                 instance.config, new PostParameter(this.method,
@@ -120,6 +162,11 @@ public final class TwitterClient {
         return jsonArray;
     }
 
+    /**
+     * get Twitter API return value as JsonObject
+     * @return
+     * @throws Exception
+     */
     public JSONObject getJsonObject() throws Exception {
         JSONObject jsonObject = execRequest(new Request<JSONObject>(new RequestTwitterJsonObject(
                 instance.config, new PostParameter(this.method,
@@ -130,6 +177,11 @@ public final class TwitterClient {
         return jsonObject;
     }
 
+    /**
+     * get Twitter API return value as String
+     * @return
+     * @throws Exception
+     */
     public String get() throws Exception {
         String response = execRequest(new Request<String>(new RequestTwitterString(
                 instance.config, new PostParameter(this.method,
@@ -140,6 +192,11 @@ public final class TwitterClient {
         return response;
     }
 
+    /**
+     * get async Twitter API return value as JsonArray
+     * @param twitterCallbackIf
+     * @throws Exception
+     */
     public void getAsyncJsonArray(final TwitterCallbackIf twitterCallbackIf) throws Exception {
         es.submit(new ExecRequestCallable<JSONArray>(new Request<JSONArray>(
                 new RequestTwitterJsonArray(instance.config, new PostParameter(
@@ -151,6 +208,11 @@ public final class TwitterClient {
         es.shutdown();
     }
 
+    /**
+     * get async Twitter API return value as JsonObject
+     * @param twitterCallbackIf
+     * @throws Exception
+     */
     public void getAsyncJsonObject(final TwitterCallbackIf twitterCallbackIf) throws Exception {
         es.submit(new ExecRequestCallable<JSONObject>(new Request<JSONObject>(
                 new RequestTwitterJsonObject(instance.config, new PostParameter(
@@ -162,6 +224,11 @@ public final class TwitterClient {
         es.shutdown();
     }
 
+    /**
+     * get Async Twitter API return value as String
+     * @param twitterCallbackIf
+     * @throws Exception
+     */
     public void getAsync(final TwitterCallbackIf twitterCallbackIf) throws Exception {
         es.submit(new ExecRequestCallable<String>(new Request<String>(
                 new RequestTwitterString(instance.config, new PostParameter(
@@ -214,7 +281,7 @@ public final class TwitterClient {
 
         @Override
         public void setPostParameter(Map<String, String> defaultParameter) {
-            if (paramMap != null && paramMap.size() != 0) {
+            if (paramMap != null && !paramMap.isEmpty()) {
                 for (String key : paramMap.keySet()) {
                     defaultParameter.put(key, paramMap.get(key));
                 }

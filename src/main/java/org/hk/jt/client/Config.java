@@ -12,13 +12,13 @@ public final class Config {
 	private final String algolithm = "HmacSHA1";
 	private String consumerKey = "";
 	private String consumerSercret = "";
-	private String userName = "";
+	private String userId = "";
 	private String password = "";
 	private String accessToken = "";
 	private String accessTokenSercret = "";
 	private String screenName = "";
 	private String twitterUserName = "";
-	private long userId = -1;
+	private long twitterUserId = -1;
 
 	public static Config getInstance(final String consumerKey,
 			final String consumerSercret) {
@@ -30,7 +30,7 @@ public final class Config {
 			final String password) {
 		instance.consumerKey = consumerKey;
 		instance.consumerSercret = consumerSercret;
-		instance.userName = userName;
+		instance.userId = userName;
 		instance.password = password;
 		return instance;
 	}
@@ -61,12 +61,12 @@ public final class Config {
 		this.consumerSercret = consumerSercret;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getPassword() {
@@ -113,6 +113,7 @@ public final class Config {
 		return screenName;
 	}
 
+        @Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 		str.setLength(0);
@@ -121,7 +122,7 @@ public final class Config {
 		str.append(String.format("algolithm = %s \n", getAlgolithm()));
 		str.append(String.format("consumerKey = %s \n", getConsumerKey()));
 		str.append(String.format("consumerSercret = %s \n", getConsumerSercret()));
-		str.append(String.format("userName = %s \n", getUserName()));
+		str.append(String.format("userName = %s \n", getUserId()));
 		str.append(String.format("password = %s \n", getPassword()));
 		str.append(String.format("accessToken = %s \n", getAccessToken()));
 		str.append(String.format("accessTokenSercret = %s ", getAccessTokenSercret()));
@@ -137,11 +138,11 @@ public final class Config {
 		return twitterUserName;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setTwitterUserId(long twitterUserId) {
+		this.twitterUserId = twitterUserId;
 	}
 
-	public long getUserId() {
-		return userId;
+	public long getTwitterUserId() {
+		return twitterUserId;
 	}
 }

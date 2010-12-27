@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.http.NameValuePair;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,6 +50,8 @@ import org.hk.jt.client.util.TwitterClientUtil;
  * @author hk
  */
 public final class TwitterClient {
+
+
 
     private static TwitterClient instance = new TwitterClient();
     private Config config;
@@ -133,6 +136,13 @@ public final class TwitterClient {
         return instance;
     }
 
+    /**
+     * set Twitter API URL
+     *
+     * @see TwitterUrls
+     * @param url
+     * @return
+     */
     public TwitterClient from(final TwitterUrls url) {
         instance.url = url.toString();
         return instance;
@@ -152,9 +162,31 @@ public final class TwitterClient {
         return instance;
     }
 
+    /**
+     * set extra parameter
+     *
+     * @param key
+     * @param value
+     * @return
+     */
     public TwitterClient param(final Params param, final String value) {
         if (value != null && !value.equals("-1") && !value.equals("")) {
             instance.paramMap.put(param.toString(), value);
+        }
+        return instance;
+    }
+
+    /**
+     * set extra parameter
+     *
+     * @param nameValuePair[]
+     * @return
+     */
+    public TwitterClient param(final NameValuePair... nameValuePair) {
+        for (NameValuePair pair : nameValuePair) {
+            if (pair.getValue() != null && !pair.getValue().equals("-1") && !pair.getValue().equals("")) {
+                instance.paramMap.put(pair.getName(), pair.getValue());
+            }
         }
         return instance;
     }
@@ -170,11 +202,23 @@ public final class TwitterClient {
         return instance;
     }
 
+    /**
+     * set extra parameter
+     *
+     * @param paramMap
+     * @return
+     */
     public TwitterClient params(final Map<String, String> paramMap) {
         instance.paramMap.putAll(paramMap);
         return instance;
     }
 
+    /**
+     * set extra parameter
+     *
+     * @param paramMap
+     * @return
+     */
     public TwitterClient paramsSet(final Map<Params, String> paramMap) {
         for (Params p : paramMap.keySet()) {
             instance.paramMap.put(p.toString(), paramMap.get(p));
@@ -182,6 +226,10 @@ public final class TwitterClient {
         return instance;
     }
 
+    /**
+     * clear parameter
+     * @return
+     */
     public TwitterClient clearParam() {
         instance.paramMap.clear();
         return instance;
@@ -293,6 +341,11 @@ public final class TwitterClient {
         es.shutdown();
     }
 
+    /**
+     * get Config
+     * @return
+     * @see Config
+     */
     public Config getConfig() {
         return instance.config;
     }

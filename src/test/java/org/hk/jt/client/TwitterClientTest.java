@@ -7,7 +7,9 @@ package org.hk.jt.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import org.apache.http.message.BasicNameValuePair;
 import static org.hk.jt.client.api.TwitterUrls.*;
+import static org.hk.jt.client.core.RequestIf.Params.*;
 import org.json.JSONArray;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
@@ -45,12 +47,24 @@ public class TwitterClientTest {
 
     @Test(dependsOnMethods = {"testAccessToken"})
     public void testHomeTimeLine() throws Exception {
-        JSONArray jsonArray = twitterClient.from(HOME_TIMELINE.toString()).getJsonArray();
+        JSONArray j = twitterClient
+                        .from(HOME_TIMELINE)
+                        .param(
+                            new BasicNameValuePair(SINCE_ID.toString(), "100"),
+                            new BasicNameValuePair(MAX_ID.toString(), "100")
+                         )
+                         .getJsonArray();
+        JSONArray jsonArray = twitterClient.from(HOME_TIMELINE).getJsonArray();
         assertEquals(20, jsonArray.length());
     }
 
     @Test(dependsOnMethods={"testAccessToken"})
     public void testMention()throws Exception{
-        
+        JSONArray jsonArray = twitterClient.from(MENTIONS).getJsonArray();
+        assertEquals(0, jsonArray.length());
+    }
+
+    @Test(dependsOnMethods={"testAccessToken"})
+    public void testDirectMessage() throws Exception{
     }
 }

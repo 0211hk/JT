@@ -11,6 +11,7 @@ import org.hk.jt.client.core.RequestIf;
 import org.hk.jt.client.util.TwitterClientUtil;
 
 import org.apache.http.NameValuePair;
+import org.hk.jt.client.HttpMethod;
 
 public class AccessToken implements RequestIf<Map<String,String>>{
 
@@ -73,7 +74,7 @@ public class AccessToken implements RequestIf<Map<String,String>>{
 	}
 
 	@Override
-	public Method getMethod() {
-		return Method.POST;
+	public HttpMethod getMethod() {
+		return HttpMethod.POST;
 	}
 }

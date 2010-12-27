@@ -22,7 +22,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.hk.jt.client.Config;
-import org.hk.jt.client.core.RequestIf.Method;
+import org.hk.jt.client.HttpMethod;
 import org.hk.jt.client.util.Base64;
 import org.hk.jt.client.util.SignatureEncode;
 
@@ -58,9 +58,9 @@ public class Request<T> {
 		postParameter = requestIf.getPostParameters();
 		authParameter = requestIf.getAuthParameter();
 		HttpResponse response = null;
-		if (requestIf.getMethod() == Method.POST) {
+		if (requestIf.getMethod() == HttpMethod.POST) {
 			response = execPost();
-		} else if (requestIf.getMethod() == Method.GET) {
+		} else if (requestIf.getMethod() == HttpMethod.GET) {
 			response = execGet();
 		}
 
@@ -198,7 +198,7 @@ public class Request<T> {
 	}
 
 	private String getSignatureBaseString() throws UnsupportedEncodingException {
-		return requestIf.getMethod().stringValue() + "&"
+		return requestIf.getMethod().toString() + "&"
 				+ encodeURL(requestIf.getUrl()) + "&"
 				+ SignatureEncode.encode(getRequestParameters());
 	}

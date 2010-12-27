@@ -10,6 +10,7 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 
 import org.hk.jt.client.Config;
+import org.hk.jt.client.HttpMethod;
 import org.hk.jt.client.core.RequestIf;
 import org.hk.jt.client.util.TwitterClientUtil;
 
@@ -50,7 +51,7 @@ public abstract class AbstractRequest<T> implements RequestIf<T>{
 	abstract public T getResponse(String response) throws JSONException;
 
 	@Override
-	public org.hk.jt.client.core.RequestIf.Method getMethod(){
+	public HttpMethod getMethod(){
 		return postParameterIf.getMethod();
 	}
 	

@@ -13,14 +13,11 @@ import org.json.JSONObject;
 import org.hk.jt.client.api.AccessToken;
 import org.hk.jt.client.api.PostParameterIf;
 import org.hk.jt.client.api.RequestTwitterJsonArray;
-import static org.hk.jt.client.api.TwitterUrls.*;
+import static org.hk.jt.client.TwitterUrls.*;
 import org.hk.jt.client.api.RequestTwitterJsonObject;
 import org.hk.jt.client.api.RequestTwitterString;
-import org.hk.jt.client.api.TwitterUrls;
 import org.hk.jt.client.core.Request;
-import org.hk.jt.client.core.RequestIf.Method;
-import static org.hk.jt.client.core.RequestIf.Method.*;
-import org.hk.jt.client.core.RequestIf.Params;
+import static org.hk.jt.client.HttpMethod.*;
 import org.hk.jt.client.util.TwitterClientUtil;
 
 /**
@@ -51,14 +48,12 @@ import org.hk.jt.client.util.TwitterClientUtil;
  */
 public final class TwitterClient {
 
-
-
     private static TwitterClient instance = new TwitterClient();
     private Config config;
     private final ExecutorService es = Executors.newCachedThreadPool();
     private String url = HOME_TIMELINE.toString();
     private final Map<String, String> paramMap = new HashMap<String, String>();
-    private Method method = GET;
+    private HttpMethod method = GET;
 
     private TwitterClient() {
     }
@@ -169,7 +164,7 @@ public final class TwitterClient {
      * @param value
      * @return
      */
-    public TwitterClient param(final Params param, final String value) {
+    public TwitterClient param(final TwitterParams param, final String value) {
         if (value != null && !value.equals("-1") && !value.equals("")) {
             instance.paramMap.put(param.toString(), value);
         }
@@ -197,7 +192,7 @@ public final class TwitterClient {
      * @param method
      * @return
      */
-    public TwitterClient method(final Method method) {
+    public TwitterClient method(final HttpMethod method) {
         instance.method = method;
         return instance;
     }
@@ -219,8 +214,8 @@ public final class TwitterClient {
      * @param paramMap
      * @return
      */
-    public TwitterClient paramsSet(final Map<Params, String> paramMap) {
-        for (Params p : paramMap.keySet()) {
+    public TwitterClient paramsSet(final Map<TwitterParams, String> paramMap) {
+        for (TwitterParams p : paramMap.keySet()) {
             instance.paramMap.put(p.toString(), paramMap.get(p));
         }
         return instance;
@@ -374,11 +369,11 @@ public final class TwitterClient {
 
     class PostParameter implements PostParameterIf {
 
-        private final Method method;
+        private final HttpMethod method;
         private final String urls;
         private final Map<String, String> paramMap;
 
-        public PostParameter(final Method method, final String urls,
+        public PostParameter(final HttpMethod method, final String urls,
                 final Map<String, String> paramMap) {
             this.method = method;
             this.urls = urls;
@@ -396,7 +391,7 @@ public final class TwitterClient {
         }
 
         @Override
-        public Method getMethod() {
+        public HttpMethod getMethod() {
             return method;
         }
 

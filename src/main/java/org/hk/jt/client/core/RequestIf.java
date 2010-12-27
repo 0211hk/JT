@@ -36,4 +36,16 @@ public interface RequestIf<T> {
 			return this.method;
 		}
 	}
+
+        public enum Params{
+            SINCE_ID("since_id"),MAX_ID("max_id");
+            private String params;
+            private Params(String params){
+                this.params = params;
+            }
+            @Override
+            public String toString(){
+                return this.params;
+            }
+        }
 }

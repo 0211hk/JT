@@ -19,27 +19,33 @@ import org.hk.jt.client.api.TwitterUrls;
 import org.hk.jt.client.core.Request;
 import org.hk.jt.client.core.RequestIf.Method;
 import static org.hk.jt.client.core.RequestIf.Method.*;
+import org.hk.jt.client.core.RequestIf.Params;
 import org.hk.jt.client.util.TwitterClientUtil;
 
 /**
  * Access to Twitter
+ * 
  * <pre>
- * //create TwitterClient instance
- * TwitterClient twitterClient = TwitterClient.getInstance(_CONSUMER_KEY, _CONSUMER_SERCRET, _USER_ID, _PASSWORD);
- * //first you get AccessToken
+ * // create TwitterClient instance
+ * TwitterClient twitterClient = TwitterClient.getInstance(_CONSUMER_KEY,
+ * 		_CONSUMER_SERCRET, _USER_ID, _PASSWORD);
+ * // first you get AccessToken
  * twitterClient.getAccessToken();
- * //now you can get ScreenName and TwitterUserId
+ * // now you can get ScreenName and TwitterUserId
  * String screenName = twitterClient.getConfig().getScreenName();
  * long twitterUserId = twitterClient.getConfig().getTwitterUserId();
- * //get home timeline
- * JSONArray jsonArray = twitterClient.from(HOME_TIMELINE.toString()).getJsonArray();
- * //expect 20
+ * // get home timeline
+ * JSONArray jsonArray = twitterClient.from(HOME_TIMELINE.toString())
+ * 		.getJsonArray();
+ * // expect 20
  * System.out.println(jsonArray.length());
- *
- * jsonArray = twitterClient.from(HOME_TIMELINE.toString()).param("page","100").getJsonArray();
- * //expect 100
+ * 
+ * jsonArray = twitterClient.from(HOME_TIMELINE.toString()).param(&quot;page&quot;, &quot;100&quot;)
+ * 		.getJsonArray();
+ * // expect 100
  * System.out.println(jsonArray.length());
  * </pre>
+ * 
  * @author hk
  */
 public final class TwitterClient {
@@ -117,6 +123,7 @@ public final class TwitterClient {
 
     /**
      * set Twitter API URL
+     * 
      * @see TwitterUrls
      * @param url
      * @return
@@ -126,36 +133,70 @@ public final class TwitterClient {
         return instance;
     }
 
+    public TwitterClient from(final TwitterUrls url) {
+        instance.url = url.toString();
+        return instance;
+    }
+
     /**
      * set extra parameter
+     *
      * @param key
      * @param value
      * @return
      */
     public TwitterClient param(final String key, final String value) {
-        instance.paramMap.put(key, value);
+        if (value != null && !value.equals("-1") && !value.equals("")) {
+            instance.paramMap.put(key, value);
+        }
+        return instance;
+    }
+
+    public TwitterClient param(final Params param,final String value){
+        if (value != null && !value.equals("-1") && !value.equals("")) {
+            instance.paramMap.put(param.toString(), value);
+        }
         return instance;
     }
 
     /**
      * set http method GET or POST or PUT or DELETE
+     *
      * @param method
      * @return
      */
-    public TwitterClient method(Method method) {
+    public TwitterClient method(final Method method) {
         instance.method = method;
+        return instance;
+    }
+
+    public TwitterClient params(final Map<String, String> paramMap) {
+        instance.paramMap.putAll(paramMap);
+        return instance;
+    }
+
+    public TwitterClient paramsSet(final Map<Params,String> paramMap){
+        for (Params p : paramMap.keySet()){
+            instance.paramMap.put(p.toString(), paramMap.get(p));
+        }
+        return instance;
+    }
+
+    public TwitterClient clearParam() {
+        instance.paramMap.clear();
         return instance;
     }
 
     /**
      * get Twitter API return value as JsonArray
+     *
      * @return
      * @throws Exception
      */
     public JSONArray getJsonArray() throws Exception {
-        JSONArray jsonArray = execRequest(new Request<JSONArray>(new RequestTwitterJsonArray(
-                instance.config, new PostParameter(this.method,
-                this.url, this.paramMap))));
+        JSONArray jsonArray = execRequest(new Request<JSONArray>(
+                new RequestTwitterJsonArray(instance.config, new PostParameter(
+                this.method, this.url, this.paramMap))));
         this.url = HOME_TIMELINE.toString();
         this.method = GET;
         this.paramMap.clear();
@@ -164,13 +205,14 @@ public final class TwitterClient {
 
     /**
      * get Twitter API return value as JsonObject
+     *
      * @return
      * @throws Exception
      */
     public JSONObject getJsonObject() throws Exception {
-        JSONObject jsonObject = execRequest(new Request<JSONObject>(new RequestTwitterJsonObject(
-                instance.config, new PostParameter(this.method,
-                this.url, this.paramMap))));
+        JSONObject jsonObject = execRequest(new Request<JSONObject>(
+                new RequestTwitterJsonObject(instance.config,
+                new PostParameter(this.method, this.url, this.paramMap))));
         this.url = HOME_TIMELINE.toString();
         this.method = GET;
         this.paramMap.clear();
@@ -179,13 +221,14 @@ public final class TwitterClient {
 
     /**
      * get Twitter API return value as String
+     *
      * @return
      * @throws Exception
      */
     public String get() throws Exception {
-        String response = execRequest(new Request<String>(new RequestTwitterString(
-                instance.config, new PostParameter(this.method,
-                this.url, this.paramMap))));
+        String response = execRequest(new Request<String>(
+                new RequestTwitterString(instance.config, new PostParameter(
+                this.method, this.url, this.paramMap))));
         this.url = HOME_TIMELINE.toString();
         this.method = GET;
         this.paramMap.clear();
@@ -194,14 +237,15 @@ public final class TwitterClient {
 
     /**
      * get async Twitter API return value as JsonArray
+     *
      * @param twitterCallbackIf
      * @throws Exception
      */
-    public void getAsyncJsonArray(final TwitterCallbackIf twitterCallbackIf) throws Exception {
+    public void getAsyncJsonArray(final TwitterCallbackIf<JSONArray> twitterCallbackIf)
+            throws Exception {
         es.submit(new ExecRequestCallable<JSONArray>(new Request<JSONArray>(
                 new RequestTwitterJsonArray(instance.config, new PostParameter(
-                this.method, this.url,
-                paramMap))), twitterCallbackIf));
+                this.method, this.url, paramMap))), twitterCallbackIf));
         this.url = HOME_TIMELINE.toString();
         this.method = GET;
         this.paramMap.clear();
@@ -210,14 +254,16 @@ public final class TwitterClient {
 
     /**
      * get async Twitter API return value as JsonObject
+     *
      * @param twitterCallbackIf
      * @throws Exception
      */
-    public void getAsyncJsonObject(final TwitterCallbackIf twitterCallbackIf) throws Exception {
+    public void getAsyncJsonObject(final TwitterCallbackIf<JSONObject> twitterCallbackIf)
+            throws Exception {
         es.submit(new ExecRequestCallable<JSONObject>(new Request<JSONObject>(
-                new RequestTwitterJsonObject(instance.config, new PostParameter(
-                this.method, this.url,
-                paramMap))), twitterCallbackIf));
+                new RequestTwitterJsonObject(instance.config,
+                new PostParameter(this.method, this.url, paramMap))),
+                twitterCallbackIf));
         this.url = HOME_TIMELINE.toString();
         this.method = GET;
         this.paramMap.clear();
@@ -226,14 +272,15 @@ public final class TwitterClient {
 
     /**
      * get Async Twitter API return value as String
+     *
      * @param twitterCallbackIf
      * @throws Exception
      */
-    public void getAsync(final TwitterCallbackIf twitterCallbackIf) throws Exception {
+    public void getAsync(final TwitterCallbackIf<String> twitterCallbackIf)
+            throws Exception {
         es.submit(new ExecRequestCallable<String>(new Request<String>(
                 new RequestTwitterString(instance.config, new PostParameter(
-                this.method, this.url,
-                paramMap))), twitterCallbackIf));
+                this.method, this.url, paramMap))), twitterCallbackIf));
         this.url = HOME_TIMELINE.toString();
         this.method = GET;
         this.paramMap.clear();

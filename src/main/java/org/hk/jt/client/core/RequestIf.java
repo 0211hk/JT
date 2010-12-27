@@ -38,7 +38,9 @@ public interface RequestIf<T> {
 	}
 
         public enum Params{
-            SINCE_ID("since_id"),MAX_ID("max_id");
+            SINCE_ID("since_id"), MAX_ID("max_id"), COUNT("count"), SCREEN_NAM(
+				"screen_name"), INCLUDE_RTS("include_rts"), USER_A("user_a"), USER_B(
+				"user_b"), FOLLOW("follow"),USER("user"),TEXT("text"),STATUS("status");
             private String params;
             private Params(String params){
                 this.params = params;

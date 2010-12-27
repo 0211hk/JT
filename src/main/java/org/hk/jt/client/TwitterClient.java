@@ -152,7 +152,7 @@ public final class TwitterClient {
         return instance;
     }
 
-    public TwitterClient param(final Params param,final String value){
+    public TwitterClient param(final Params param, final String value) {
         if (value != null && !value.equals("-1") && !value.equals("")) {
             instance.paramMap.put(param.toString(), value);
         }
@@ -175,8 +175,8 @@ public final class TwitterClient {
         return instance;
     }
 
-    public TwitterClient paramsSet(final Map<Params,String> paramMap){
-        for (Params p : paramMap.keySet()){
+    public TwitterClient paramsSet(final Map<Params, String> paramMap) {
+        for (Params p : paramMap.keySet()) {
             instance.paramMap.put(p.toString(), paramMap.get(p));
         }
         return instance;
@@ -213,6 +213,12 @@ public final class TwitterClient {
         JSONObject jsonObject = execRequest(new Request<JSONObject>(
                 new RequestTwitterJsonObject(instance.config,
                 new PostParameter(this.method, this.url, this.paramMap))));
+        if (this.url.equals(VERIFY_CREDENTIALS.toString())) {
+            instance.config.setScreenName(jsonObject.getString("screen_name"));
+            instance.config.setTwitterUserName(jsonObject.getString("name"));
+            instance.config.setTwitterUserId(jsonObject.getLong("id"));
+            instance.config.setStatusesCount(jsonObject.getLong("statuses_count"));
+        }
         this.url = HOME_TIMELINE.toString();
         this.method = GET;
         this.paramMap.clear();

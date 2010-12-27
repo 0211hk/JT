@@ -50,8 +50,8 @@ public class TwitterClientTest {
         JSONArray j = twitterClient
                         .from(HOME_TIMELINE)
                         .param(
-                            new BasicNameValuePair(SINCE_ID.toString(), "100"),
-                            new BasicNameValuePair(MAX_ID.toString(), "100")
+                            new ParameterPair(SINCE_ID, "100"),
+                            new ParameterPair(MAX_ID, "100")
                          )
                          .getJsonArray();
         JSONArray jsonArray = twitterClient.from(HOME_TIMELINE).getJsonArray();

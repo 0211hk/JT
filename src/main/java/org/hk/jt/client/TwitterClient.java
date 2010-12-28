@@ -21,9 +21,12 @@ import static org.hk.jt.client.HttpMethod.*;
 import org.hk.jt.client.util.TwitterClientUtil;
 
 /**
- * Access to Twitter
- * 
+ * Access to Twitter.
  * <pre>
+ * import org.hk.jt.client.TwitterClient;
+ * //static import
+ * import static org.hk.jt.client.TwitterUrls.*;
+ * 
  * // create TwitterClient instance
  * TwitterClient twitterClient = TwitterClient.getInstance(_CONSUMER_KEY,
  * 		_CONSUMER_SERCRET, _USER_ID, _PASSWORD);
@@ -33,12 +36,12 @@ import org.hk.jt.client.util.TwitterClientUtil;
  * String screenName = twitterClient.getConfig().getScreenName();
  * long twitterUserId = twitterClient.getConfig().getTwitterUserId();
  * // get home timeline
- * JSONArray jsonArray = twitterClient.from(HOME_TIMELINE.toString())
+ * JSONArray jsonArray = twitterClient.from(HOME_TIMELINE)
  * 		.getJsonArray();
  * // expect 20
  * System.out.println(jsonArray.length());
  * 
- * jsonArray = twitterClient.from(HOME_TIMELINE.toString()).param(&quot;page&quot;, &quot;100&quot;)
+ * jsonArray = twitterClient.from(HOME_TIMELINE).param(&quot;page&quot;, &quot;100&quot;)
  * 		.getJsonArray();
  * // expect 100
  * System.out.println(jsonArray.length());
@@ -62,13 +65,13 @@ public final class TwitterClient {
      * create instance with twitter user name & password
      *
      * @param consumerKey
-     *            - twitter xauth consumer key
+     *             twitter xauth consumer key
      * @param consumerSercret
-     *            - twitter xauth consumer sercret
+     *             twitter xauth consumer sercret
      * @param userName
-     *            - twitter username
+     *             twitter username
      * @param password
-     *            - twitter password
+     *             twitter password
      * @return this
      */
     public static TwitterClient getInstance(final String consumerKey,
@@ -83,14 +86,14 @@ public final class TwitterClient {
      * create instance with twitter accesstoken & accesstoken sercret
      *
      * @param consumerKey
-     *            - twitter xauth consumer key
+     *             twitter xauth consumer key
      * @param consumerSercret
-     *            - twitter xauth consumer sercret
+     *             twitter xauth consumer sercret
      * @param accessToken
-     *            - accesstoken
+     *             accesstoken
      * @param accessTokenSercret
-     *            - accesstoken sercret
-     * @return
+     *             accesstoken sercret
+     * @return this
      */
     public static TwitterClient getInstanceWithAccessToken(
             final String consumerKey, final String consumerSercret,
@@ -103,9 +106,10 @@ public final class TwitterClient {
     /**
      * get accesstoken
      *
+     * @return map
      * @throws Exception
      */
-    public void getAccessToken() throws Exception {
+    public Map<String,String> getAccessToken() throws Exception {
         Map<String, String> map = execRequest(new Request<Map<String, String>>(
                 new AccessToken(instance.config)));
         instance.config.setAccessToken(map.get("oauth_token"));
@@ -117,6 +121,7 @@ public final class TwitterClient {
                 instance.config.setTwitterUserId(Long.parseLong(map.get("user_id")));
             }
         }
+        return map;
     }
 
     /**
@@ -124,10 +129,22 @@ public final class TwitterClient {
      * 
      * @see TwitterUrls
      * @param url
-     * @return
+     * @return this
      */
     public TwitterClient from(final String url) {
         instance.url = url;
+        return instance;
+    }
+
+    /**
+     * Set Twitter API URL
+     * @param <T>
+     * @param url 
+     * @param args
+     * @return this
+     */
+    public <T> TwitterClient from(final String url ,final T...args){
+        instance.url = String.format(url, args);
         return instance;
     }
 
@@ -136,10 +153,15 @@ public final class TwitterClient {
      *
      * @see TwitterUrls
      * @param url
-     * @return
+     * @return this
      */
     public TwitterClient from(final TwitterUrls url) {
         instance.url = url.toString();
+        return instance;
+    }
+
+    public TwitterClient from(final TwitterUrls url,final String...args){
+        instance.url = String.format(url.toString(), (Object[])args);
         return instance;
     }
 
@@ -148,7 +170,7 @@ public final class TwitterClient {
      *
      * @param key
      * @param value
-     * @return
+     * @return this
      */
     public TwitterClient param(final String key, final String value) {
         if (value != null && !value.equals("-1") && !value.equals("")) {
@@ -162,7 +184,7 @@ public final class TwitterClient {
      *
      * @param key
      * @param value
-     * @return
+     * @return this
      */
     public TwitterClient param(final TwitterParams param, final String value) {
         if (value != null && !value.equals("-1") && !value.equals("")) {
@@ -174,8 +196,8 @@ public final class TwitterClient {
     /**
      * set extra parameter
      *
-     * @param nameValuePair[]
-     * @return
+     * @param nameValuePair
+     * @return this
      */
     public TwitterClient param(final NameValuePair... nameValuePair) {
         for (NameValuePair pair : nameValuePair) {
@@ -190,7 +212,7 @@ public final class TwitterClient {
      * set http method GET or POST or PUT or DELETE
      *
      * @param method
-     * @return
+     * @return this
      */
     public TwitterClient method(final HttpMethod method) {
         instance.method = method;
@@ -201,23 +223,10 @@ public final class TwitterClient {
      * set extra parameter
      *
      * @param paramMap
-     * @return
+     * @return this
      */
     public TwitterClient params(final Map<String, String> paramMap) {
         instance.paramMap.putAll(paramMap);
-        return instance;
-    }
-
-    /**
-     * set extra parameter
-     *
-     * @param paramMap
-     * @return
-     */
-    public TwitterClient paramsSet(final Map<TwitterParams, String> paramMap) {
-        for (TwitterParams p : paramMap.keySet()) {
-            instance.paramMap.put(p.toString(), paramMap.get(p));
-        }
         return instance;
     }
 
@@ -231,7 +240,7 @@ public final class TwitterClient {
     }
 
     /**
-     * get Twitter API return value as JsonArray
+     * get Twitter return value as JsonArray
      *
      * @return
      * @throws Exception
@@ -247,7 +256,7 @@ public final class TwitterClient {
     }
 
     /**
-     * get Twitter API return value as JsonObject
+     * get Twitter return value as JsonObject
      *
      * @return
      * @throws Exception
@@ -269,7 +278,7 @@ public final class TwitterClient {
     }
 
     /**
-     * get Twitter API return value as String
+     * get Twitter return value as String
      *
      * @return
      * @throws Exception
@@ -285,7 +294,7 @@ public final class TwitterClient {
     }
 
     /**
-     * get async Twitter API return value as JsonArray
+     * get async Twitter return value as JsonArray
      *
      * @param twitterCallbackIf
      * @throws Exception
@@ -302,7 +311,7 @@ public final class TwitterClient {
     }
 
     /**
-     * get async Twitter API return value as JsonObject
+     * get async Twitter return value as JsonObject
      *
      * @param twitterCallbackIf
      * @throws Exception
@@ -320,7 +329,7 @@ public final class TwitterClient {
     }
 
     /**
-     * get Async Twitter API return value as String
+     * get Async Twitter return value as String
      *
      * @param twitterCallbackIf
      * @throws Exception

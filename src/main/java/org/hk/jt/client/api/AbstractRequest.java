@@ -14,16 +14,17 @@ import org.hk.jt.client.HttpMethod;
 import org.hk.jt.client.core.RequestIf;
 import org.hk.jt.client.util.TwitterClientUtil;
 
-public abstract class AbstractRequest<T> implements RequestIf<T>{
+public abstract class AbstractRequest<T> implements RequestIf<T> {
 
 	private final Config config;
 	private final PostParameterIf postParameterIf;
-	
-	public AbstractRequest(final Config config,final PostParameterIf postParameterIf){
+
+	public AbstractRequest(final Config config,
+			final PostParameterIf postParameterIf) {
 		this.config = config;
 		this.postParameterIf = postParameterIf;
 	}
-	
+
 	@Override
 	public Map<String, String> getPostParameters()
 			throws UnsupportedEncodingException {
@@ -41,7 +42,7 @@ public abstract class AbstractRequest<T> implements RequestIf<T>{
 	public SortedMap<String, String> getAuthParameter() {
 		return TwitterClientUtil.getXAuthParameter(config);
 	}
-	
+
 	@Override
 	public Config getConfig() {
 		return config;
@@ -51,12 +52,12 @@ public abstract class AbstractRequest<T> implements RequestIf<T>{
 	abstract public T getResponse(String response) throws JSONException;
 
 	@Override
-	public HttpMethod getMethod(){
+	public HttpMethod getMethod() {
 		return postParameterIf.getMethod();
 	}
-	
+
 	@Override
-	public String getUrl(){
+	public String getUrl() {
 		return postParameterIf.getUrl();
 	}
 }

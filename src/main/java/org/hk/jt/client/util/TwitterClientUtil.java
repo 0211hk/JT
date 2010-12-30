@@ -11,7 +11,7 @@ public final class TwitterClientUtil {
     private TwitterClientUtil() {
     }
 
-    public static SortedMap<String, String> getXAuthParameter(Config config) {
+    public static SortedMap<String, String> getXAuthParameter(final Config config) {
         SortedMap<String, String> map = new TreeMap<String, String>();
         map.put("oauth_consumer_key", config.getConsumerKey());
         map.put("oauth_nonce", UUID.randomUUID().toString());
@@ -22,7 +22,7 @@ public final class TwitterClientUtil {
         return map;
     }
 
-    public static SortedMap<String, String> getXAuthAccessParameter(Config config) {
+    public static SortedMap<String, String> getXAuthAccessParameter(final Config config) {
         SortedMap<String, String> map = new TreeMap<String, String>();
         map.put("oauth_consumer_key", config.getConsumerKey());
         map.put("oauth_nonce", UUID.randomUUID().toString());

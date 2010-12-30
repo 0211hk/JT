@@ -19,7 +19,7 @@ public abstract class AbstractRequest<T> implements RequestIf<T> {
 	private final Config config;
 	private final PostParameterIf postParameterIf;
 
-	public AbstractRequest(final Config config,
+	AbstractRequest(final Config config,
 			final PostParameterIf postParameterIf) {
 		this.config = config;
 		this.postParameterIf = postParameterIf;

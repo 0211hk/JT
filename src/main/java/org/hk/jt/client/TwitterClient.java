@@ -32,9 +32,6 @@ import static org.hk.jt.client.HttpMethod.*;
  * 		_CONSUMER_SERCRET, _USER_ID, _PASSWORD);
  * // first you get AccessToken
  * twitterClient.getAccessToken();
- * // now you can get ScreenName and TwitterUserId
- * String screenName = twitterClient.getConfig().getScreenName();
- * long twitterUserId = twitterClient.getConfig().getTwitterUserId();
  * // get home timeline
  * JSONArray jsonArray = twitterClient.from(HOME_TIMELINE)
  * 		.getJsonArray();

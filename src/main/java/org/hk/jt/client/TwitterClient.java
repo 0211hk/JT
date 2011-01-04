@@ -73,7 +73,7 @@ public final class TwitterClient {
 	}
 
 	/***
-	 * create this with twitter user name & password
+	 * create instance with twitter user name & password
 	 * 
 	 * @param consumerKey
 	 *            twitter xauth consumer key
@@ -95,7 +95,7 @@ public final class TwitterClient {
 	}
 
 	/**
-	 * create this with twitter accesstoken & accesstoken sercret
+	 * create instance with twitter accesstoken & accesstoken sercret
 	 * 
 	 * @param consumerKey
 	 *            twitter xauth consumer key
@@ -130,10 +130,10 @@ public final class TwitterClient {
 
 	/**
 	 * Set Twitter API URL
-	 * 
-	 * @param <T>
-	 * @param url
-	 * @param args
+	 * With format String
+	 * @param <T> 
+	 * @param url A format string
+	 * @param args Arguments referenced by the format specifiers in the format string. 
 	 * @return this
 	 */
 	public <T> TwitterClient from(final String url, final T... args) {
@@ -153,6 +153,13 @@ public final class TwitterClient {
 		return this;
 	}
 
+	/**
+	 * Set Twitter API URL
+	 * With format String
+	 * @param url A format string
+	 * @param args Arguments referenced by the format specifiers in the format string. 
+	 * @return
+	 */
 	public TwitterClient from(final TwitterUrls url, final String... args) {
 		this.url = String.format(url.toString(), (Object[]) args);
 		return this;

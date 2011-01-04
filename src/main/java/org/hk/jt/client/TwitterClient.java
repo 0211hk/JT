@@ -120,7 +120,7 @@ public final class TwitterClient {
 	 * set Twitter API URL
 	 * 
 	 * @see TwitterUrls
-	 * @param url
+	 * @param url Twitter API URL
 	 * @return this
 	 */
 	public TwitterClient from(final String url) {
@@ -132,7 +132,7 @@ public final class TwitterClient {
 	 * Set Twitter API URL
 	 * With format String
 	 * @param <T> 
-	 * @param url A format string
+	 * @param url Twitter API URL (A format string)
 	 * @param args Arguments referenced by the format specifiers in the format string. 
 	 * @return this
 	 */
@@ -145,7 +145,7 @@ public final class TwitterClient {
 	 * set Twitter API URL
 	 * 
 	 * @see TwitterUrls
-	 * @param url
+	 * @param url Twitter API URL
 	 * @return this
 	 */
 	public TwitterClient from(final TwitterUrls url) {
@@ -156,7 +156,7 @@ public final class TwitterClient {
 	/**
 	 * Set Twitter API URL
 	 * With format String
-	 * @param url A format string
+	 * @param url Twitter API URL(A format string)
 	 * @param args Arguments referenced by the format specifiers in the format string. 
 	 * @return
 	 */
@@ -168,8 +168,8 @@ public final class TwitterClient {
 	/**
 	 * set extra parameter
 	 * 
-	 * @param key
-	 * @param value
+	 * @param key parameter key
+	 * @param value parameter value
 	 * @return this
 	 */
 	public TwitterClient param(final String key, final String value) {
@@ -182,8 +182,8 @@ public final class TwitterClient {
 	/**
 	 * set extra parameter
 	 * 
-	 * @param key
-	 * @param value
+	 * @param key parameter key
+	 * @param value parameter value
 	 * @return this
 	 */
 	public TwitterClient param(final TwitterParams param, final String value) {
@@ -196,7 +196,7 @@ public final class TwitterClient {
 	/**
 	 * set extra parameter
 	 * 
-	 * @param nameValuePair
+	 * @param nameValuePair Parameter Key & Parameter value
 	 * @return this
 	 */
 	public TwitterClient param(final NameValuePair... nameValuePair) {
@@ -217,17 +217,6 @@ public final class TwitterClient {
 	 */
 	public TwitterClient method(final HttpMethod method) {
 		this.method = method;
-		return this;
-	}
-
-	/**
-	 * set extra parameter
-	 * 
-	 * @param paramMap
-	 * @return this
-	 */
-	public TwitterClient params(final Map<String, String> paramMap) {
-		this.paramMap.putAll(paramMap);
 		return this;
 	}
 
@@ -260,7 +249,7 @@ public final class TwitterClient {
 	/**
 	 * get accesstoken
 	 * 
-	 * @return map
+	 * @return map 
 	 * @throws Exception
 	 */
 	public Map<String, String> getAccessToken() throws Exception {
@@ -287,7 +276,7 @@ public final class TwitterClient {
 	/**
 	 * get Twitter return value as JsonObject
 	 * 
-	 * @return
+	 * @return jsonObject
 	 * @throws Exception
 	 */
 	public JSONObject getJsonObject() throws Exception {
@@ -303,7 +292,7 @@ public final class TwitterClient {
 	/**
 	 * get Twitter return value as String
 	 * 
-	 * @return
+	 * @return String
 	 * @throws Exception
 	 */
 	public String get() throws Exception {
@@ -337,7 +326,7 @@ public final class TwitterClient {
 	/**
 	 * get async Twitter return value as JsonObject
 	 * 
-	 * @param twitterCallbackIf
+	 * @param twitterCallbackIf call back Object must implements TwitterCallbackIf
 	 * @throws Exception
 	 */
 	public void getAsyncJsonObject(
@@ -355,7 +344,7 @@ public final class TwitterClient {
 	/**
 	 * get Async Twitter return value as String
 	 * 
-	 * @param twitterCallbackIf
+	 * @param twitterCallbackIf call back Object must implements TwitterCallbackIf
 	 * @throws Exception
 	 */
 	public void getAsync(final TwitterCallbackIf<String> twitterCallbackIf)

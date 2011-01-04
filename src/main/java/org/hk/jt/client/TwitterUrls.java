@@ -30,6 +30,11 @@ package org.hk.jt.client;
  */
 public enum TwitterUrls {
 
+	/**
+	 * Get AccessToken
+	 * @see http://dev.twitter.com/doc/post/oauth/access_token
+	 */
+	ACCESS_TOKEN("https://api.twitter.com/oauth/access_token"),
     /**
      * Get HomeTimeline
      * @see http://dev.twitter.com/doc/get/statuses/home_timeline

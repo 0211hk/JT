@@ -31,7 +31,6 @@ import org.hk.jt.client.HttpMethod;
 public class AccessToken implements RequestIf<Map<String,String>>{
 
 	private final Config config;
-	private static final String ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token";
 	private final PostParameterIf postParameterIf;
 
 	public AccessToken(final Config config){
@@ -75,7 +74,7 @@ public class AccessToken implements RequestIf<Map<String,String>>{
 
 	@Override
 	public String getUrl(){
-		return ACCESS_TOKEN_URL;
+		return postParameterIf.getUrl();
 	}
 
 	@Override
@@ -90,6 +89,6 @@ public class AccessToken implements RequestIf<Map<String,String>>{
 
 	@Override
 	public HttpMethod getMethod() {
-		return HttpMethod.POST;
+		return postParameterIf.getMethod();
 	}
 }

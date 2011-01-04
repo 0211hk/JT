@@ -68,8 +68,8 @@ public class TwitterClientTest {
 		assertEquals(0, jsonArray.length());
 	}
 
-	@Test(dependsOnMethods = { "testAccessToken" })
-	public void testDirectMessage() throws Exception {
-
-	}
+//	@Test(dependsOnMethods = { "testAccessToken" })
+//	public void testDirectMessage() throws Exception {
+//
+//	}
 }

@@ -46,6 +46,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.CookiePolicy;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -69,7 +70,9 @@ public class Request<T> {
 		this.config = this.requestIf.getConfig();
 	}
 
-	public T request() throws UnsupportedEncodingException, JSONException, IOException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException  {
+	public T request() throws UnsupportedEncodingException, JSONException,
+			IOException, URISyntaxException, InvalidKeyException,
+			NoSuchAlgorithmException {
 		postParameter = requestIf.getPostParameters();
 		authParameter = requestIf.getAuthParameter();
 		HttpResponse response = null;
@@ -115,7 +118,9 @@ public class Request<T> {
 		return requestIf.getResponse(sb.toString());
 	}
 
-	private HttpResponse execPost() throws URISyntaxException, InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, IOException  {
+	private HttpResponse execPost() throws URISyntaxException,
+			InvalidKeyException, UnsupportedEncodingException,
+			NoSuchAlgorithmException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost();
 		httpPost.setURI(new URI(requestIf.getUrl()));
@@ -147,7 +152,9 @@ public class Request<T> {
 		return client.execute(httpPost);
 	}
 
-	private HttpResponse execGet() throws URISyntaxException, UnsupportedEncodingException, InvalidKeyException, IOException, NoSuchAlgorithmException  {
+	private HttpResponse execGet() throws URISyntaxException,
+			UnsupportedEncodingException, InvalidKeyException, IOException,
+			NoSuchAlgorithmException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet();
 		if (postParameter != null && !postParameter.isEmpty()) {

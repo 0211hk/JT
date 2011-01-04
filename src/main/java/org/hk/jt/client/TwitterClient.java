@@ -89,7 +89,8 @@ public final class TwitterClient {
 			final String consumerSercret, final String userName,
 			final String password) {
 		TwitterClient tc = new TwitterClient();
-		tc.config = Config.getInstance(consumerKey, consumerSercret, userName, password);
+		tc.config = Config.getInstance(consumerKey, consumerSercret, userName,
+				password);
 		return tc;
 	}
 
@@ -113,20 +114,6 @@ public final class TwitterClient {
 		tc.config = Config.getInstanceWithAccessToken(consumerKey,
 				consumerSercret, accessToken, accessTokenSercret);
 		return tc;
-	}
-
-	/**
-	 * get accesstoken
-	 * 
-	 * @return map
-	 * @throws Exception
-	 */
-	public Map<String, String> getAccessToken() throws Exception {
-		Map<String, String> map = execRequest(new Request<Map<String, String>>(
-				new AccessToken(config)));
-		config.setAccessToken(map.get("oauth_token"));
-		config.setAccessTokenSercret(map.get("oauth_token_secret"));
-		return map;
 	}
 
 	/**
@@ -264,6 +251,33 @@ public final class TwitterClient {
 	}
 
 	/**
+	 * get accesstoken
+	 * 
+	 * @return map
+	 * @throws Exception
+	 */
+	public Map<String, String> getAccessToken() throws Exception {
+		if(this.url.equals(HOME_TIMELINE.toString())){
+			this.url = ACCESS_TOKEN.toString();
+		}
+		if(this.method == GET){
+			this.method = POST;
+		}
+		if(!this.paramMap.isEmpty()){
+			this.paramMap.clear();
+		}
+		Map<String, String> map = execRequest(new Request<Map<String, String>>(
+				new AccessToken(config, new PostParameter(this.method,
+						this.url, this.paramMap))));
+		config.setAccessToken(map.get("oauth_token"));
+		config.setAccessTokenSercret(map.get("oauth_token_secret"));
+		this.url = HOME_TIMELINE.toString();
+		this.method = GET;
+		this.paramMap.clear();
+		return map;
+	}
+
+	/**
 	 * get Twitter return value as JsonObject
 	 * 
 	 * @return
@@ -271,8 +285,8 @@ public final class TwitterClient {
 	 */
 	public JSONObject getJsonObject() throws Exception {
 		JSONObject jsonObject = execRequest(new Request<JSONObject>(
-				new RequestTwitterJsonObject(this.config,
-						new PostParameter(this.method, this.url, this.paramMap))));
+				new RequestTwitterJsonObject(this.config, new PostParameter(
+						this.method, this.url, this.paramMap))));
 		this.url = HOME_TIMELINE.toString();
 		this.method = GET;
 		this.paramMap.clear();
@@ -323,9 +337,8 @@ public final class TwitterClient {
 			final TwitterCallbackIf<JSONObject> twitterCallbackIf)
 			throws Exception {
 		es.submit(new ExecRequestCallable<JSONObject>(new Request<JSONObject>(
-				new RequestTwitterJsonObject(this.config,
-						new PostParameter(this.method, this.url, paramMap))),
-				twitterCallbackIf));
+				new RequestTwitterJsonObject(this.config, new PostParameter(
+						this.method, this.url, paramMap))), twitterCallbackIf));
 		this.url = HOME_TIMELINE.toString();
 		this.method = GET;
 		this.paramMap.clear();

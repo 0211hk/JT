@@ -99,20 +99,27 @@ public enum TwitterUrls {
      * Post CreateFriendship
      * @see http://dev.twitter.com/doc/post/friendships/create
      */
-    FRIENDSSHIPS_CREATE("http://api.twitter.com/1/friendships/create.json");
+    FRIENDSSHIPS_CREATE("http://api.twitter.com/1/friendships/create.json"),
+	/**
+	 * Get List
+	 * @see http://dev.twitter.com/doc/get/:user/lists
+	 */
+	USER_LIST("http://api.twitter.com/1/%s/lists.json"),
+	/**
+	 * Get list subscriptions
+	 * @see http://dev.twitter.com/doc/get/:user/lists/subscriptions
+	 */
+	SUBSCRIPTION_LIST("http://api.twitter.com/1/%s/lists/subscriptions.json"),
+	/**
+	 * Get statuses list
+	 * @see http://dev.twitter.com/doc/get/:user/lists/:id/statuses
+	 */
+	STATUSES_LIST("http://api.twitter.com/1/%s/lists/%s/statuses.json");
+	
     private final String url;
 
     private TwitterUrls(final String url) {
         this.url = url;
-    }
-
-    /**
-     * GetUrl
-     * @param args format parameter
-     * @return url
-     */
-    public String getUrl(String... args) {
-        return String.format(this.url, (Object[]) args);
     }
 
     /**

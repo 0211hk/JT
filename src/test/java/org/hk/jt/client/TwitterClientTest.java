@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Properties;
 import static org.hk.jt.client.TwitterUrls.*;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
@@ -35,6 +36,8 @@ public class TwitterClientTest {
 	private final String _CONSUMER_SERCRET;
 	private final String _USER_ID;
 	private final String _PASSWORD;
+	private final String _LIST_USER;
+	private final String _LIST_ID;
 	private TwitterClient twitterClient = null;
 
 	public TwitterClientTest() throws IOException {
@@ -45,6 +48,8 @@ public class TwitterClientTest {
 		_CONSUMER_SERCRET = properties.getProperty("CONSUMER_KEY_SERCRET");
 		_USER_ID = properties.getProperty("TWITTER_ID");
 		_PASSWORD = properties.getProperty("TWITTER_PASSWORD");
+		_LIST_USER = properties.getProperty("LIST_USER");
+		_LIST_ID = properties.getProperty("LIST_ID");
 	}
 
 	@Test
@@ -68,8 +73,31 @@ public class TwitterClientTest {
 		assertEquals(0, jsonArray.length());
 	}
 
-//	@Test(dependsOnMethods = { "testAccessToken" })
-//	public void testDirectMessage() throws Exception {
-//
-//	}
+	@Test(dependsOnMethods = { "testAccessToken" })
+	public void testList() throws Exception {
+		JSONObject jsonObject = twitterClient.from(USER_LIST, _LIST_USER)
+				.getJsonObject();
+		JSONArray array = jsonObject.getJSONArray("lists");
+		assertEquals(array.length(), 20);
+	}
+
+	@Test(dependsOnMethods = { "testAccessToken" })
+	public void testSubscriptionList() throws Exception {
+		JSONObject jsonObject = twitterClient.from(SUBSCRIPTION_LIST,
+				_LIST_USER).getJsonObject();
+		JSONArray array = jsonObject.getJSONArray("lists");
+		assertEquals(array.length(), 0);
+	}
+
+	@Test(dependsOnMethods = { "testAccessToken" })
+	public void testStatusesList() throws Exception {
+		JSONArray jsonArray = twitterClient.from(STATUSES_LIST, _LIST_USER,
+				_LIST_ID).getJsonArray();
+		assertEquals(jsonArray.length(), 20);
+	}
+
+	// @Test(dependsOnMethods = { "testAccessToken" })
+	// public void testDirectMessage() throws Exception {
+	//
+	// }
 }

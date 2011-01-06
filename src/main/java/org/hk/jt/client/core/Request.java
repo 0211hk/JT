@@ -47,6 +47,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.CookiePolicy;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -122,6 +123,7 @@ public class Request<T> {
 			InvalidKeyException, UnsupportedEncodingException,
 			NoSuchAlgorithmException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
+		HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BROWSER_COMPATIBILITY);
 		HttpPost httpPost = new HttpPost();
 		httpPost.setURI(new URI(requestIf.getUrl()));
 		httpPost.setHeader("Authorization", createAuthorizationValue());
@@ -156,6 +158,7 @@ public class Request<T> {
 			UnsupportedEncodingException, InvalidKeyException, IOException,
 			NoSuchAlgorithmException {
 		DefaultHttpClient client = new DefaultHttpClient();
+		HttpClientParams.setCookiePolicy(client.getParams(), CookiePolicy.BROWSER_COMPATIBILITY);
 		HttpGet httpGet = new HttpGet();
 		if (postParameter != null && !postParameter.isEmpty()) {
 			httpGet.setURI(new URI(requestIf.getUrl() + "?" + getRequestParam()));

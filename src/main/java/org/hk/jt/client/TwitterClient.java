@@ -28,11 +28,9 @@ import org.json.JSONObject;
 import org.hk.jt.client.api.AccessToken;
 import org.hk.jt.client.api.PostParameterIf;
 import org.hk.jt.client.api.RequestTwitterJsonArray;
-import static org.hk.jt.client.TwitterUrls.*;
 import org.hk.jt.client.api.RequestTwitterJsonObject;
 import org.hk.jt.client.api.RequestTwitterString;
 import org.hk.jt.client.core.Request;
-import static org.hk.jt.client.HttpMethod.*;
 
 /**
  * Access to Twitter.
@@ -63,13 +61,22 @@ import static org.hk.jt.client.HttpMethod.*;
  */
 public final class TwitterClient {
 
-	private Config config;
+	private final Config config;
 	private final ExecutorService es = Executors.newCachedThreadPool();
-	private String url = HOME_TIMELINE.toString();
 	private final Map<String, String> paramMap = new HashMap<String, String>();
-	private HttpMethod method = GET;
+	private String url = null;
+	private HttpMethod method = null;
 
-	private TwitterClient() {
+	private TwitterClient(final String consumerKey,
+			final String consumerSercret, final String userId,
+			final String password, final boolean isAccessToken) {
+		if (isAccessToken) {
+			config = Config.getInstanceWithAccessToken(consumerKey,
+					consumerSercret, userId, password);
+		} else {
+			config = Config.getInstance(consumerKey, consumerSercret, userId,
+					password);
+		}
 	}
 
 	/***
@@ -88,10 +95,8 @@ public final class TwitterClient {
 	public static TwitterClient getInstance(final String consumerKey,
 			final String consumerSercret, final String userName,
 			final String password) {
-		TwitterClient tc = new TwitterClient();
-		tc.config = Config.getInstance(consumerKey, consumerSercret, userName,
-				password);
-		return tc;
+		return new TwitterClient(consumerKey, consumerSercret, userName,
+				password, false);
 	}
 
 	/**
@@ -110,17 +115,16 @@ public final class TwitterClient {
 	public static TwitterClient getInstanceWithAccessToken(
 			final String consumerKey, final String consumerSercret,
 			final String accessToken, final String accessTokenSercret) {
-		TwitterClient tc = new TwitterClient();
-		tc.config = Config.getInstanceWithAccessToken(consumerKey,
-				consumerSercret, accessToken, accessTokenSercret);
-		return tc;
+		return new TwitterClient(consumerKey, consumerSercret, accessToken,
+				accessTokenSercret, true);
 	}
 
 	/**
 	 * set Twitter API URL
 	 * 
 	 * @see TwitterUrls
-	 * @param url Twitter API URL
+	 * @param url
+	 *            Twitter API URL
 	 * @return this
 	 */
 	public TwitterClient from(final String url) {
@@ -129,11 +133,14 @@ public final class TwitterClient {
 	}
 
 	/**
-	 * Set Twitter API URL
-	 * With format String
-	 * @param <T> 
-	 * @param url Twitter API URL (A format string)
-	 * @param args Arguments referenced by the format specifiers in the format string. 
+	 * Set Twitter API URL With format String
+	 * 
+	 * @param <T>
+	 * @param url
+	 *            Twitter API URL (A format string)
+	 * @param args
+	 *            Arguments referenced by the format specifiers in the format
+	 *            string.
 	 * @return this
 	 */
 	public <T> TwitterClient from(final String url, final T... args) {
@@ -145,7 +152,8 @@ public final class TwitterClient {
 	 * set Twitter API URL
 	 * 
 	 * @see TwitterUrls
-	 * @param url Twitter API URL
+	 * @param url
+	 *            Twitter API URL
 	 * @return this
 	 */
 	public TwitterClient from(final TwitterUrls url) {
@@ -154,10 +162,13 @@ public final class TwitterClient {
 	}
 
 	/**
-	 * Set Twitter API URL
-	 * With format String
-	 * @param url Twitter API URL(A format string)
-	 * @param args Arguments referenced by the format specifiers in the format string. 
+	 * Set Twitter API URL With format String
+	 * 
+	 * @param url
+	 *            Twitter API URL(A format string)
+	 * @param args
+	 *            Arguments referenced by the format specifiers in the format
+	 *            string.
 	 * @return
 	 */
 	public TwitterClient from(final TwitterUrls url, final String... args) {
@@ -168,8 +179,10 @@ public final class TwitterClient {
 	/**
 	 * set extra parameter
 	 * 
-	 * @param key parameter key
-	 * @param value parameter value
+	 * @param key
+	 *            parameter key
+	 * @param value
+	 *            parameter value
 	 * @return this
 	 */
 	public TwitterClient param(final String key, final String value) {
@@ -182,8 +195,10 @@ public final class TwitterClient {
 	/**
 	 * set extra parameter
 	 * 
-	 * @param key parameter key
-	 * @param value parameter value
+	 * @param key
+	 *            parameter key
+	 * @param value
+	 *            parameter value
 	 * @return this
 	 */
 	public TwitterClient param(final TwitterParams param, final String value) {
@@ -196,7 +211,8 @@ public final class TwitterClient {
 	/**
 	 * set extra parameter
 	 * 
-	 * @param nameValuePair Parameter Key & Parameter value
+	 * @param nameValuePair
+	 *            Parameter Key & Parameter value
 	 * @return this
 	 */
 	public TwitterClient param(final NameValuePair... nameValuePair) {
@@ -240,36 +256,21 @@ public final class TwitterClient {
 		JSONArray jsonArray = execRequest(new Request<JSONArray>(
 				new RequestTwitterJsonArray(this.config, new PostParameter(
 						this.method, this.url, this.paramMap))));
-		this.url = HOME_TIMELINE.toString();
-		this.method = GET;
-		this.paramMap.clear();
 		return jsonArray;
 	}
 
 	/**
 	 * get accesstoken
 	 * 
-	 * @return map 
+	 * @return map
 	 * @throws Exception
 	 */
 	public Map<String, String> getAccessToken() throws Exception {
-		if(this.url.equals(HOME_TIMELINE.toString())){
-			this.url = ACCESS_TOKEN.toString();
-		}
-		if(this.method == GET){
-			this.method = POST;
-		}
-		if(!this.paramMap.isEmpty()){
-			this.paramMap.clear();
-		}
 		Map<String, String> map = execRequest(new Request<Map<String, String>>(
 				new AccessToken(config, new PostParameter(this.method,
 						this.url, this.paramMap))));
 		config.setAccessToken(map.get("oauth_token"));
 		config.setAccessTokenSercret(map.get("oauth_token_secret"));
-		this.url = HOME_TIMELINE.toString();
-		this.method = GET;
-		this.paramMap.clear();
 		return map;
 	}
 
@@ -283,9 +284,6 @@ public final class TwitterClient {
 		JSONObject jsonObject = execRequest(new Request<JSONObject>(
 				new RequestTwitterJsonObject(this.config, new PostParameter(
 						this.method, this.url, this.paramMap))));
-		this.url = HOME_TIMELINE.toString();
-		this.method = GET;
-		this.paramMap.clear();
 		return jsonObject;
 	}
 
@@ -295,13 +293,10 @@ public final class TwitterClient {
 	 * @return String
 	 * @throws Exception
 	 */
-	public String get() throws Exception {
+	public synchronized String get() throws Exception {
 		String response = execRequest(new Request<String>(
 				new RequestTwitterString(this.config, new PostParameter(
 						this.method, this.url, this.paramMap))));
-		this.url = HOME_TIMELINE.toString();
-		this.method = GET;
-		this.paramMap.clear();
 		return response;
 	}
 
@@ -317,16 +312,14 @@ public final class TwitterClient {
 		es.submit(new ExecRequestCallable<JSONArray>(new Request<JSONArray>(
 				new RequestTwitterJsonArray(this.config, new PostParameter(
 						this.method, this.url, paramMap))), twitterCallbackIf));
-		this.url = HOME_TIMELINE.toString();
-		this.method = GET;
-		this.paramMap.clear();
 		es.shutdown();
 	}
 
 	/**
 	 * get async Twitter return value as JsonObject
 	 * 
-	 * @param twitterCallbackIf call back Object must implements TwitterCallbackIf
+	 * @param twitterCallbackIf
+	 *            call back Object must implements TwitterCallbackIf
 	 * @throws Exception
 	 */
 	public void getAsyncJsonObject(
@@ -335,16 +328,14 @@ public final class TwitterClient {
 		es.submit(new ExecRequestCallable<JSONObject>(new Request<JSONObject>(
 				new RequestTwitterJsonObject(this.config, new PostParameter(
 						this.method, this.url, paramMap))), twitterCallbackIf));
-		this.url = HOME_TIMELINE.toString();
-		this.method = GET;
-		this.paramMap.clear();
 		es.shutdown();
 	}
 
 	/**
 	 * get Async Twitter return value as String
 	 * 
-	 * @param twitterCallbackIf call back Object must implements TwitterCallbackIf
+	 * @param twitterCallbackIf
+	 *            call back Object must implements TwitterCallbackIf
 	 * @throws Exception
 	 */
 	public void getAsync(final TwitterCallbackIf<String> twitterCallbackIf)
@@ -352,13 +343,10 @@ public final class TwitterClient {
 		es.submit(new ExecRequestCallable<String>(new Request<String>(
 				new RequestTwitterString(this.config, new PostParameter(
 						this.method, this.url, paramMap))), twitterCallbackIf));
-		this.url = HOME_TIMELINE.toString();
-		this.method = GET;
-		this.paramMap.clear();
 		es.shutdown();
 	}
 
-	private <E> E execRequest(Request<E> req) throws Exception {
+	private <E> E execRequest(final Request<E> req) throws Exception {
 		return req.request();
 	}
 

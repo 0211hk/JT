@@ -31,6 +31,8 @@ import org.hk.jt.client.api.RequestTwitterJsonArray;
 import org.hk.jt.client.api.RequestTwitterJsonObject;
 import org.hk.jt.client.api.RequestTwitterString;
 import org.hk.jt.client.core.Request;
+import static org.hk.jt.client.HttpMethod.*;
+import static org.hk.jt.client.TwitterUrls.*;
 
 /**
  * Access to Twitter.
@@ -267,8 +269,8 @@ public final class TwitterClient {
 	 */
 	public Map<String, String> getAccessToken() throws Exception {
 		Map<String, String> map = execRequest(new Request<Map<String, String>>(
-				new AccessToken(config, new PostParameter(this.method,
-						this.url, this.paramMap))));
+				new AccessToken(config, new PostParameter(POST,
+						ACCESS_TOKEN.toString(), this.paramMap))));
 		config.setAccessToken(map.get("oauth_token"));
 		config.setAccessTokenSercret(map.get("oauth_token_secret"));
 		return map;
@@ -376,6 +378,13 @@ public final class TwitterClient {
 
 		public PostParameter(final HttpMethod method, final String urls,
 				final Map<String, String> paramMap) {
+			if(method == null){
+				throw new NullPointerException("HttpMethod is null.Must be set HttpMethod.");
+			}
+			if(urls == null || urls.equals("")){
+				throw new NullPointerException("TwitterUrl is null.Must be set Url.");
+			}
+			
 			this.method = method;
 			this.urls = urls;
 			this.paramMap = paramMap;

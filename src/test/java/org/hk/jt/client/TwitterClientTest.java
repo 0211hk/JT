@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import static org.hk.jt.client.TwitterUrls.*;
+import static org.hk.jt.client.HttpMethod.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.annotations.Test;
@@ -63,36 +64,40 @@ public class TwitterClientTest {
 
 	@Test(dependsOnMethods = { "testAccessToken" })
 	public void testHomeTimeLine() throws Exception {
-		JSONArray jsonArray = twitterClient.from(HOME_TIMELINE).getJsonArray();
+		JSONArray jsonArray = twitterClient.from(HOME_TIMELINE).method(GET)
+				.getJsonArray();
 		assertEquals(20, jsonArray.length());
 	}
 
 	@Test(dependsOnMethods = { "testAccessToken" })
 	public void testMention() throws Exception {
-		JSONArray jsonArray = twitterClient.from(MENTIONS).getJsonArray();
+		JSONArray jsonArray = twitterClient.from(MENTIONS).method(GET)
+				.getJsonArray();
 		assertEquals(0, jsonArray.length());
 	}
 
 	@Test(dependsOnMethods = { "testAccessToken" })
 	public void testList() throws Exception {
 		JSONObject jsonObject = twitterClient.from(USER_LIST, _LIST_USER)
-				.getJsonObject();
+				.method(GET).getJsonObject();
 		JSONArray array = jsonObject.getJSONArray("lists");
 		assertEquals(array.length(), 20);
 	}
 
 	@Test(dependsOnMethods = { "testAccessToken" })
 	public void testSubscriptionList() throws Exception {
-		JSONObject jsonObject = twitterClient.from(SUBSCRIPTION_LIST,
-				_LIST_USER).getJsonObject();
+		JSONObject jsonObject = twitterClient
+				.from(SUBSCRIPTION_LIST, _LIST_USER).method(GET)
+				.getJsonObject();
 		JSONArray array = jsonObject.getJSONArray("lists");
 		assertEquals(array.length(), 0);
 	}
 
 	@Test(dependsOnMethods = { "testAccessToken" })
 	public void testStatusesList() throws Exception {
-		JSONArray jsonArray = twitterClient.from(STATUSES_LIST, _LIST_USER,
-				_LIST_ID).getJsonArray();
+		JSONArray jsonArray = twitterClient
+				.from(STATUSES_LIST, _LIST_USER, _LIST_ID).method(GET)
+				.getJsonArray();
 		assertEquals(jsonArray.length(), 20);
 	}
 

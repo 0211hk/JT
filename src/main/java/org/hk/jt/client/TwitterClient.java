@@ -16,6 +16,7 @@
 package org.hk.jt.client;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -227,6 +228,26 @@ public final class TwitterClient {
 		return this;
 	}
 
+	public TwitterClient param(final Map<String, String> params) {
+		for (String key : params.keySet()) {
+			if (params.get(key) != null && !params.get(key).equals("-1")
+					&& !params.get(key).equals("")) {
+				this.paramMap.put(key, params.get(key));
+			}
+		}
+		return this;
+	}
+
+	public TwitterClient param(final List<NameValuePair> nameValuePairList) {
+		for (NameValuePair pair : nameValuePairList) {
+			if (pair.getValue() != null && !pair.getValue().equals("-1")
+					&& !pair.getValue().equals("")) {
+				this.paramMap.put(pair.getName(), pair.getValue());
+			}
+		}
+		return this;
+	}
+
 	/**
 	 * set http method GET or POST or PUT or DELETE
 	 * 
@@ -378,13 +399,15 @@ public final class TwitterClient {
 
 		public PostParameter(final HttpMethod method, final String urls,
 				final Map<String, String> paramMap) {
-			if(method == null){
-				throw new NullPointerException("HttpMethod is null.Must be set HttpMethod.");
+			if (method == null) {
+				throw new NullPointerException(
+						"HttpMethod is null.Must be set HttpMethod.");
 			}
-			if(urls == null || urls.equals("")){
-				throw new NullPointerException("TwitterUrl is null.Must be set Url.");
+			if (urls == null || urls.equals("")) {
+				throw new NullPointerException(
+						"TwitterUrl is null.Must be set Url.");
 			}
-			
+
 			this.method = method;
 			this.urls = urls;
 			this.paramMap = paramMap;

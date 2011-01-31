@@ -39,6 +39,7 @@ public class TwitterClientTest {
 	private final String _PASSWORD;
 	private final String _LIST_USER;
 	private final String _LIST_ID;
+	private final String _FAVORITE_ID;
 	private TwitterClient twitterClient = null;
 
 	public TwitterClientTest() throws IOException {
@@ -51,6 +52,7 @@ public class TwitterClientTest {
 		_PASSWORD = properties.getProperty("TWITTER_PASSWORD");
 		_LIST_USER = properties.getProperty("LIST_USER");
 		_LIST_ID = properties.getProperty("LIST_ID");
+		_FAVORITE_ID = properties.getProperty("FAVORITE_ID");
 	}
 
 	@Test
@@ -73,7 +75,7 @@ public class TwitterClientTest {
 	public void testMention() throws Exception {
 		JSONArray jsonArray = twitterClient.from(MENTIONS).method(GET)
 				.getJsonArray();
-		assertEquals(0, jsonArray.length());
+		assertEquals(6, jsonArray.length());
 	}
 
 	@Test(dependsOnMethods = { "testAccessToken" })
@@ -91,6 +93,28 @@ public class TwitterClientTest {
 				.getJsonObject();
 		JSONArray array = jsonObject.getJSONArray("lists");
 		assertEquals(array.length(), 0);
+	}
+
+	@Test(dependsOnMethods = { "testAccessToken" })
+	public void testCreateFavorite() throws Exception {
+		JSONObject jsonObject = twitterClient.from(FAVORITE_CREATE, _FAVORITE_ID)
+				.method(POST).getJsonObject();
+		System.out.println(jsonObject);
+	}
+
+	@Test(dependsOnMethods = { "testAccessToken", "testCreateFavorite" })
+	public void testFavorites() throws Exception {
+		JSONArray jsonArray = twitterClient.from(FAVORITES).method(GET)
+				.getJsonArray();
+		assertEquals(jsonArray.length(),2);
+	}
+
+	@Test(dependsOnMethods = { "testAccessToken", "testCreateFavorite",
+			"testFavorites" })
+	public void testDestroyFavorite() throws Exception {
+		JSONObject jsonObject = twitterClient.from(FAVORITE_DESTROY, _FAVORITE_ID)
+				.method(POST).getJsonObject();
+		System.out.println(jsonObject);
 	}
 
 	@Test(dependsOnMethods = { "testAccessToken" })

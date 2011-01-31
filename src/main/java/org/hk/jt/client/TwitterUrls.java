@@ -114,7 +114,22 @@ public enum TwitterUrls {
 	 * Get statuses list
 	 * @see http://dev.twitter.com/doc/get/:user/lists/:id/statuses
 	 */
-	STATUSES_LIST("http://api.twitter.com/1/%s/lists/%s/statuses.json");
+	STATUSES_LIST("http://api.twitter.com/1/%s/lists/%s/statuses.json"),
+	/**
+	 * Get favorite
+	 * http://apiwiki.twitter.com/w/page/22554703/Twitter-REST-API-Method:-favorites
+	 * */
+	FAVORITES("http://api.twitter.com/1/favorites.json"),
+	/**
+	 * Create favorite
+	 * http://apiwiki.twitter.com/w/page/22554704/Twitter-REST-API-Method:-favorites%C2%A0create
+	 * */
+	FAVORITE_CREATE("http://api.twitter.com/1/favorites/create/%s.json"),
+	/**
+	 * destroy favorite
+	 * http://apiwiki.twitter.com/w/page/22554705/Twitter-REST-API-Method:-favorites%C2%A0destroy
+	 * */
+	FAVORITE_DESTROY("http://api.twitter.com/1/favorites/destroy/%s.json");
 	
     private final String url;
 
